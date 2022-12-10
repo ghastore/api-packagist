@@ -4,7 +4,7 @@
 # CONFIGURATION.
 # -------------------------------------------------------------------------------------------------------------------- #
 
-# Vars.
+# Action.
 GIT_REPO="${1}"
 GIT_USER="${2}"
 GIT_EMAIL="${3}"
@@ -14,8 +14,10 @@ API_URL_REPO="${6}"
 API_DIR="${7}"
 API_VENDOR="${8}"
 BOT_INFO="${9}"
-USER_AGENT="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36 (${BOT_INFO})"
+
+# Vars.
 TIME_MOD="+$(( 60*24 ))"
+USER_AGENT="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36 (${BOT_INFO})"
 
 # Apps.
 curl="$( command -v curl )"
