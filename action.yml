@@ -1,0 +1,41 @@
+name: "Packagist API"
+author: ""
+description: ""
+branding:
+  icon: ""
+  color: ""
+inputs:
+  git_repo:
+    description: "Git Repository"
+    required: true
+  git_user:
+    description: "Git User"
+    required: true
+  git_email:
+    description: "Git E-mail"
+    required: true
+  git_token:
+    description: "Git Token"
+    required: true
+  api_dir:
+    description: "API Directory"
+    required: true
+    default: "api/packagist"
+  api_vendor:
+    description: "API Vendor"
+    required: true
+  bot_info:
+    description: "Bot Information"
+    required: true
+    default: "Email: unit22bot@gmail.com"
+runs:
+  using: "docker"
+  image: "Dockerfile"
+  args:
+    - ${{ inputs.git_repo }}
+    - ${{ inputs.git_user }}
+    - ${{ inputs.git_email }}
+    - ${{ inputs.git_token }}
+    - ${{ inputs.api_dir }}
+    - ${{ inputs.api_vendor }}
+    - ${{ inputs.bot_info }}
