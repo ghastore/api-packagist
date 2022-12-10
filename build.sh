@@ -19,6 +19,7 @@ USER_AGENT="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML,
 # Apps.
 curl="$( command -v curl )"
 date="$( command -v date )"
+find="$( command -v find )"
 git="$( command -v git )"
 jq="$( command -v jq )"
 mkdir="$( command -v mkdir )"
@@ -64,15 +65,23 @@ api_pkgs() {
   echo "--- [PACKAGIST] PACKAGES"
   _pushd "${d_src}" || exit 1
 
-  local dir; dir="${API_DIR}/${API_VENDOR}/packages"
+  local dir="${API_DIR}/${API_VENDOR}/packages"
   [[ ! -d "${dir}" ]] && _mkdir "${dir}"
 
   local pkgs
   readarray -t pkgs < <( _curl "${API_URL_MAIN}/packages/list.json?vendor=${API_VENDOR}" | ${jq} -r '.packageNames[]' | awk -F '/' '{ print $2 }' )
 
   for pkg in "${pkgs[@]}"; do
-    _download "${API_URL_MAIN}/packages/${API_VENDOR}/${pkg}.json" "${dir}/${pkg}.json"
-    _download "${API_URL_REPO}/p2/${API_VENDOR}/${pkg}.json" "${dir}/${pkg}.repo.json"
+    local f_pkg="${dir}/${pkg}.json"
+    local f_pkg_repo="${dir}/${pkg}.repo.json"
+
+    if [[ $( ${find} "${f_pkg}" -mmin +$(( 60*24 )) -print ) ]]; then
+      _download "${API_URL_MAIN}/packages/${API_VENDOR}/${pkg}.json" "${f_pkg}"
+    fi
+
+    if [[ $( ${find} "${f_pkg_repo}" -mmin +$(( 60*24 )) -print ) ]]; then
+      _download "${API_URL_REPO}/p2/${API_VENDOR}/${pkg}.json" "${f_pkg_repo}"
+    fi
   done
 
   ${jq} -nc '$ARGS.positional' --args "${pkgs[@]}" > "${dir}/_all.json"
