@@ -73,8 +73,10 @@ api_pkgs() {
   readarray -t pkgs < <( _curl "${API_URL_MAIN}/packages/list.json?vendor=${API_VENDOR}" | ${jq} -r '.packageNames[]' | awk -F '/' '{ print $2 }' )
 
   for pkg in "${pkgs[@]}"; do
-    _download "${API_URL_MAIN}/packages/${API_VENDOR}/${pkg}.json" "${dir}/${pkg}.json"
-    _download "${API_URL_REPO}/p2/${API_VENDOR}/${pkg}.json" "${dir}/${pkg}.repo.json"
+    local api_main="${API_URL_MAIN}/packages/${API_VENDOR}/${pkg}.json"
+    local api_repo="${API_URL_REPO}/p2/${API_VENDOR}/${pkg}.json"
+    echo "Get '${api_main}'..." && _download "${api_main}" "${dir}/${pkg}.json"
+    echo "Get '${api_repo}'..." && _download "${api_repo}" "${dir}/${pkg}.repo.json"
   done
 
   ${jq} -nc '$ARGS.positional' --args "${pkgs[@]}" > "${dir%/*}/${API_VENDOR}.packages.json"
