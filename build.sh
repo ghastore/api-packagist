@@ -60,7 +60,7 @@ clone() {
 
 api_pkgs() {
   echo "--- [PACKAGIST] PACKAGES"
-  #_pushd "${d_src}" || exit 1
+  _pushd "${d_src}" || exit 1
 
   local dir; dir="${API_DIR}/${API_VENDOR}/packages"
   [[ ! -d "${dir}" ]] && _mkdir "${dir}"
@@ -76,7 +76,7 @@ api_pkgs() {
 
   ${jq} -nc '$ARGS.positional' --args "${pkgs[@]}" > "${dir}/_all.json"
 
-  #_popd || exit 1
+  _popd || exit 1
 }
 
 # -------------------------------------------------------------------------------------------------------------------- #
