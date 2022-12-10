@@ -75,16 +75,11 @@ api_pkgs() {
     local f_pkg="${dir}/${pkg}.json"
     local f_pkg_repo="${dir}/${pkg}.repo.json"
 
-    if [[ $( ${find} "${f_pkg}" -mmin +$(( 60*24 )) -print ) ]]; then
-      _download "${API_URL_MAIN}/packages/${API_VENDOR}/${pkg}.json" "${f_pkg}"
-    fi
-
-    if [[ $( ${find} "${f_pkg_repo}" -mmin +$(( 60*24 )) -print ) ]]; then
-      _download "${API_URL_REPO}/p2/${API_VENDOR}/${pkg}.json" "${f_pkg_repo}"
-    fi
+    _download "${API_URL_MAIN}/packages/${API_VENDOR}/${pkg}.json" "${f_pkg}"
+    _download "${API_URL_REPO}/p2/${API_VENDOR}/${pkg}.json" "${f_pkg_repo}"
   done
 
-  ${jq} -nc '$ARGS.positional' --args "${pkgs[@]}" > "${dir%/*}/packages.json"
+  ${jq} -nc '$ARGS.positional' --args "${pkgs[@]}" > "${dir%/*}/${API_VENDOR}.packages.json"
 
   _popd || exit 1
 }
