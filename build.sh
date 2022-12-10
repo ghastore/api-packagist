@@ -66,12 +66,11 @@ api_pkgs() {
   [[ ! -d "${dir}" ]] && _mkdir "${dir}"
 
   local pkgs
-  readarray -t pkgs < <( _curl "https://packagist.org/packages/list.json?vendor=${API_VENDOR}" | ${jq} -r '.packageNames[]' )
+  readarray -t pkgs < <( _curl "https://packagist.org/packages/list.json?vendor=${API_VENDOR}" | ${jq} -r '.packageNames[]' | awk -F '[/]' '{ print $2 }' )
 
   for pkg in "${pkgs[@]}"; do
-    local name; name="$( echo "${pkg}" | awk -F '[/]' '{ print $2 }' )"
-    _download "https://packagist.org/packages/${pkg}.json" "${dir}/${name}.json"
-    _download "https://repo.packagist.org/p2/${pkg}.json" "${dir}/${name}.repo.json"
+    _download "https://packagist.org/packages/${API_VENDOR}/${pkg}.json" "${dir}/${pkg}.json"
+    _download "https://repo.packagist.org/p2/${API_VENDOR}/${pkg}.json" "${dir}/${pkg}.repo.json"
   done
 
   ${jq} -nc '$ARGS.positional' --args "${pkgs[@]}" > "${dir}/_all.json"
