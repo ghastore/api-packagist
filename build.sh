@@ -80,10 +80,14 @@ api_pkgs() {
 
     if [[ ! -f "${f_pkg}" ]] || [[ $( ${find} "${f_pkg}" -mmin ${TIME_MOD} -print ) ]]; then
       _download "${API_URL_MAIN}/packages/${API_VENDOR}/${pkg}.json" "${f_pkg}"
+    else
+      echo "File '${f_pkg}' is not changed!"
     fi
 
     if [[ ! -f "${f_pkg_repo}" ]] || [[ $( ${find} "${f_pkg_repo}" -mmin ${TIME_MOD} -print ) ]]; then
       _download "${API_URL_REPO}/p2/${API_VENDOR}/${pkg}.json" "${f_pkg_repo}"
+    else
+      echo "File '${f_pkg_repo}' is not changed!"
     fi
   done
 
