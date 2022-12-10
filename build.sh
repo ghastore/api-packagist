@@ -16,13 +16,11 @@ API_VENDOR="${8}"
 BOT_INFO="${9}"
 
 # Vars.
-TIME_MOD="+$(( 60*24 ))"
 USER_AGENT="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36 (${BOT_INFO})"
 
 # Apps.
 curl="$( command -v curl )"
 date="$( command -v date )"
-find="$( command -v find )"
 git="$( command -v git )"
 jq="$( command -v jq )"
 mkdir="$( command -v mkdir )"
@@ -68,32 +66,18 @@ api_pkgs() {
   echo "--- [PACKAGIST] PACKAGES"
   _pushd "${d_src}" || exit 1
 
-  local d_pkgs="${API_DIR}/${API_VENDOR}/packages"
-  [[ ! -d "${d_pkgs}" ]] && _mkdir "${d_pkgs}"
+  local dir="${API_DIR}/${API_VENDOR}/packages"
+  [[ ! -d "${dir}" ]] && _mkdir "${dir}"
 
   local pkgs
   readarray -t pkgs < <( _curl "${API_URL_MAIN}/packages/list.json?vendor=${API_VENDOR}" | ${jq} -r '.packageNames[]' | awk -F '/' '{ print $2 }' )
 
   for pkg in "${pkgs[@]}"; do
-    local u_pkg="${API_URL_MAIN}/packages/${API_VENDOR}/${pkg}.json"
-    local u_pkg_repo="${API_URL_REPO}/p2/${API_VENDOR}/${pkg}.json"
-    local f_pkg="${d_pkgs}/${pkg}.json"
-    local f_pkg_repo="${d_pkgs}/${pkg}.repo.json"
-
-    if [[ ! -f "${f_pkg}" ]] || [[ $( ${find} "${f_pkg}" -mmin ${TIME_MOD} -print ) ]]; then
-      echo "Get API '${u_pkg}'..." && _download "${u_pkg}" "${f_pkg}"
-    else
-      echo "File '${f_pkg}' is not changed!"
-    fi
-
-    if [[ ! -f "${f_pkg_repo}" ]] || [[ $( ${find} "${f_pkg_repo}" -mmin ${TIME_MOD} -print ) ]]; then
-      echo "Get API '${u_pkg_repo}'..." && _download "${u_pkg_repo}" "${f_pkg_repo}"
-    else
-      echo "File '${f_pkg_repo}' is not changed!"
-    fi
+    _download "${API_URL_MAIN}/packages/${API_VENDOR}/${pkg}.json" "${dir}/${pkg}.json"
+    _download "${API_URL_REPO}/p2/${API_VENDOR}/${pkg}.json" "${dir}/${pkg}.repo.json"
   done
 
-  ${jq} -nc '$ARGS.positional' --args "${pkgs[@]}" > "${d_pkgs%/*}/${API_VENDOR}.packages.json"
+  ${jq} -nc '$ARGS.positional' --args "${pkgs[@]}" > "${dir%/*}/${API_VENDOR}.packages.json"
 
   _popd || exit 1
 }
