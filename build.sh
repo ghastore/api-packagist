@@ -68,7 +68,7 @@ api_pkgs() {
   [[ ! -d "${dir}" ]] && _mkdir "${dir}"
 
   local pkgs
-  readarray -t pkgs < <( _curl "${API_URL_MAIN}/packages/list.json?vendor=${API_VENDOR}" | ${jq} -r '.packageNames[]' | awk -F '[/]' '{ print $2 }' )
+  readarray -t pkgs < <( _curl "${API_URL_MAIN}/packages/list.json?vendor=${API_VENDOR}" | ${jq} -r '.packageNames[]' | awk -F '/' '{ print $2 }' )
 
   for pkg in "${pkgs[@]}"; do
     _download "${API_URL_MAIN}/packages/${API_VENDOR}/${pkg}.json" "${dir}/${pkg}.json"
