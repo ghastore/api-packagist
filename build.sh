@@ -93,7 +93,7 @@ api_pkgs() {
     fi
   done
 
-  ${jq} -nc '$ARGS.positional' --args "${pkgs[@]}" > "${dir%/*}/${API_VENDOR}.packages.json"
+  ${jq} -nc '$ARGS.positional' --args "${pkgs[@]}" > "${d_pkgs%/*}/${API_VENDOR}.packages.json"
 
   _popd || exit 1
 }
