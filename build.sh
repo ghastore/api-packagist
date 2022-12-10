@@ -68,8 +68,8 @@ api_pkgs() {
   echo "--- [PACKAGIST] PACKAGES"
   _pushd "${d_src}" || exit 1
 
-  local dir="${API_DIR}/${API_VENDOR}/packages"
-  [[ ! -d "${dir}" ]] && _mkdir "${dir}"
+  local d_pkgs="${API_DIR}/${API_VENDOR}/packages"
+  [[ ! -d "${d_pkgs}" ]] && _mkdir "${d_pkgs}"
 
   local pkgs
   readarray -t pkgs < <( _curl "${API_URL_MAIN}/packages/list.json?vendor=${API_VENDOR}" | ${jq} -r '.packageNames[]' | awk -F '/' '{ print $2 }' )
@@ -77,8 +77,8 @@ api_pkgs() {
   for pkg in "${pkgs[@]}"; do
     local u_pkg="${API_URL_MAIN}/packages/${API_VENDOR}/${pkg}.json"
     local u_pkg_repo="${API_URL_REPO}/p2/${API_VENDOR}/${pkg}.json"
-    local f_pkg="${dir}/${pkg}.json"
-    local f_pkg_repo="${dir}/${pkg}.repo.json"
+    local f_pkg="${d_pkgs}/${pkg}.json"
+    local f_pkg_repo="${d_pkgs}/${pkg}.repo.json"
 
     if [[ ! -f "${f_pkg}" ]] || [[ $( ${find} "${f_pkg}" -mmin ${TIME_MOD} -print ) ]]; then
       echo "Get API '${u_pkg}'..." && _download "${u_pkg}" "${f_pkg}"

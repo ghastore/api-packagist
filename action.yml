@@ -26,7 +26,7 @@ inputs:
     required: true
     default: "https://repo.packagist.org"
   api_dir:
-    description: "API Directory"
+    description: "Local API Directory"
     required: true
     default: "api/packagist"
   api_vendor:
