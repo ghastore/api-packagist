@@ -15,6 +15,7 @@ API_DIR="${7}"
 API_VENDOR="${8}"
 BOT_INFO="${9}"
 USER_AGENT="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36 (${BOT_INFO})"
+TIME_MOD="+$(( 60*24 ))"
 
 # Apps.
 curl="$( command -v curl )"
@@ -75,8 +76,13 @@ api_pkgs() {
     local f_pkg="${dir}/${pkg}.json"
     local f_pkg_repo="${dir}/${pkg}.repo.json"
 
-    _download "${API_URL_MAIN}/packages/${API_VENDOR}/${pkg}.json" "${f_pkg}"
-    _download "${API_URL_REPO}/p2/${API_VENDOR}/${pkg}.json" "${f_pkg_repo}"
+    if [[ ! -f "${f_pkg}" ]] || [[ $( ${find} "${f_pkg}" -mmin ${TIME_MOD} -print ) ]]; then
+      _download "${API_URL_MAIN}/packages/${API_VENDOR}/${pkg}.json" "${f_pkg}"
+    fi
+
+    if [[ ! -f "${f_pkg_repo}" ]] || [[ $( ${find} "${f_pkg_repo}" -mmin ${TIME_MOD} -print ) ]]; then
+      _download "${API_URL_REPO}/p2/${API_VENDOR}/${pkg}.json" "${f_pkg_repo}"
+    fi
   done
 
   ${jq} -nc '$ARGS.positional' --args "${pkgs[@]}" > "${dir%/*}/${API_VENDOR}.packages.json"
