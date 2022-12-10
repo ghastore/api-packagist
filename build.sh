@@ -79,14 +79,14 @@ api_pkgs() {
     local f_pkg_repo="${dir}/${pkg}.repo.json"
 
     if [[ ! -f "${f_pkg}" ]] || [[ $( ${find} "${f_pkg}" -mmin ${TIME_MOD} -print ) ]]; then
-      echo "Get file '${f_pkg}'..."
+      echo "Get file '${pkg}.json'..."
       _download "${API_URL_MAIN}/packages/${API_VENDOR}/${pkg}.json" "${f_pkg}"
     else
       echo "File '${f_pkg}' is not changed!"
     fi
 
     if [[ ! -f "${f_pkg_repo}" ]] || [[ $( ${find} "${f_pkg_repo}" -mmin ${TIME_MOD} -print ) ]]; then
-      echo "Get file '${f_pkg_repo}'..."
+      echo "Get file '${pkg}.repo.json'..."
       _download "${API_URL_REPO}/p2/${API_VENDOR}/${pkg}.json" "${f_pkg_repo}"
     else
       echo "File '${f_pkg_repo}' is not changed!"
