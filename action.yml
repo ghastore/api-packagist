@@ -17,6 +17,14 @@ inputs:
   git_token:
     description: "Git Token"
     required: true
+  api_url_main:
+    description: "API Main URL"
+    required: true
+    default: "https://packagist.org"
+  api_url_repo:
+    description: "API Repo URL"
+    required: true
+    default: "https://repo.packagist.org"
   api_dir:
     description: "API Directory"
     required: true
@@ -36,6 +44,8 @@ runs:
     - ${{ inputs.git_user }}
     - ${{ inputs.git_email }}
     - ${{ inputs.git_token }}
+    - ${{ inputs.api_url_main }}
+    - ${{ inputs.api_url_repo }}
     - ${{ inputs.api_dir }}
     - ${{ inputs.api_vendor }}
     - ${{ inputs.bot_info }}

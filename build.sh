@@ -9,9 +9,11 @@ GIT_REPO="${1}"
 GIT_USER="${2}"
 GIT_EMAIL="${3}"
 GIT_TOKEN="${4}"
-API_DIR="${5}"
-API_VENDOR="${6}"
-BOT_INFO="${7}"
+API_URL_MAIN="${5}"
+API_URL_REPO="${6}"
+API_DIR="${7}"
+API_VENDOR="${8}"
+BOT_INFO="${9}"
 USER_AGENT="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36 (${BOT_INFO})"
 
 # Apps.
@@ -66,11 +68,11 @@ api_pkgs() {
   [[ ! -d "${dir}" ]] && _mkdir "${dir}"
 
   local pkgs
-  readarray -t pkgs < <( _curl "https://packagist.org/packages/list.json?vendor=${API_VENDOR}" | ${jq} -r '.packageNames[]' | awk -F '[/]' '{ print $2 }' )
+  readarray -t pkgs < <( _curl "${API_URL_MAIN}/packages/list.json?vendor=${API_VENDOR}" | ${jq} -r '.packageNames[]' | awk -F '[/]' '{ print $2 }' )
 
   for pkg in "${pkgs[@]}"; do
-    _download "https://packagist.org/packages/${API_VENDOR}/${pkg}.json" "${dir}/${pkg}.json"
-    _download "https://repo.packagist.org/p2/${API_VENDOR}/${pkg}.json" "${dir}/${pkg}.repo.json"
+    _download "${API_URL_MAIN}/packages/${API_VENDOR}/${pkg}.json" "${dir}/${pkg}.json"
+    _download "${API_URL_REPO}/p2/${API_VENDOR}/${pkg}.json" "${dir}/${pkg}.repo.json"
   done
 
   ${jq} -nc '$ARGS.positional' --args "${pkgs[@]}" > "${dir}/_all.json"
