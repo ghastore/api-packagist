@@ -79,7 +79,7 @@ api_pkgs() {
     echo "Get '${api_repo}'..." && _download "${api_repo}" "${dir}/${pkg}.repo.json"
   done
 
-  ${jq} -nc '$ARGS.positional' --args "${pkgs[@]}" > "${dir%/*}/${API_VENDOR}.packages.json"
+  ${jq} -nc '$ARGS.positional' --args "${pkgs[@]}" > "${dir%/*}/packages.json"
 
   _popd || exit 1
 }
