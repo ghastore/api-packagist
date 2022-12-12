@@ -1,9 +1,9 @@
-name: "Packagist API"
-author: ""
-description: ""
+name: "Packagist API Fetch"
+author: "v77 Development <mail@v77.dev>"
+description: "GitHub Action to get Packagist API responses and save them to repository."
 branding:
-  icon: ""
-  color: ""
+  icon: "anchor"
+  color: "yellow"
 inputs:
   git_repo:
     description: "Git Repository"
@@ -35,7 +35,7 @@ inputs:
   bot_info:
     description: "Bot Information"
     required: true
-    default: "Email: unit22bot@gmail.com"
+    default: "Email: mail@example.com"
 runs:
   using: "docker"
   image: "Dockerfile"
