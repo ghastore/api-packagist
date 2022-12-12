@@ -39,9 +39,9 @@ ${git} config --global init.defaultBranch 'main'
 
 init() {
   ts="$( _timestamp )"
-  clone \
-    && api_pkgs \
-    && push
+  clone
+  pg_pkgs
+  push
 }
 
 # -------------------------------------------------------------------------------------------------------------------- #
@@ -62,7 +62,7 @@ clone() {
 # API: PACKAGES.
 # -------------------------------------------------------------------------------------------------------------------- #
 
-api_pkgs() {
+pg_pkgs() {
   echo "--- [PACKAGIST] PACKAGES"
   _pushd "${d_src}" || exit 1
 
