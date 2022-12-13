@@ -67,7 +67,7 @@ pg_pkgs() {
   _pushd "${d_src}" || exit 1
 
   local dir="${API_DIR}/${API_VENDOR}/packages"
-  _mkdir "${dir}"
+  [[ ! -d "${dir}" ]] && _mkdir "${dir}"
 
   local pkgs
   readarray -t pkgs < <( _curl "${API_URL_MAIN}/packages/list.json?vendor=${API_VENDOR}" | ${jq} -r '.packageNames[]' | awk -F '/' '{ print $2 }' )
@@ -75,8 +75,10 @@ pg_pkgs() {
   for pkg in "${pkgs[@]}"; do
     local api_main="${API_URL_MAIN}/packages/${API_VENDOR}/${pkg}.json"
     local api_repo="${API_URL_REPO}/p2/${API_VENDOR}/${pkg}.json"
-    echo "Get '${api_main}'..." && _download "${api_main}" "${dir}/${pkg}.json"
-    echo "Get '${api_repo}'..." && _download "${api_repo}" "${dir}/${pkg}.repo.json"
+    local dir_pkg="${dir}/${pkg}"
+    [[ ! -d "${dir_pkg}" ]] && _mkdir "${dir_pkg}"
+    echo "Get '${api_main}'..." && _download "${api_main}" "${dir_pkg}/info.json"
+    echo "Get '${api_repo}'..." && _download "${api_repo}" "${dir_pkg}/repo.json"
   done
 
   ${jq} -nc '$ARGS.positional' --args "${pkgs[@]}" > "${dir%/*}/packages.json"
@@ -122,7 +124,7 @@ _timestamp() {
 
 # Make directory.
 _mkdir() {
-  [[ ! -d "${1}" ]] && ${mkdir} -p "${1}"
+  ${mkdir} -p "${1}"
 }
 
 # cURL: Get Data.
