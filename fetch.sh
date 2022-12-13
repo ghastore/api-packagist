@@ -97,7 +97,7 @@ push() {
   # Commit build files & push.
   echo "Commit build files & push..."
   ${git} add . \
-    && ${git} commit -a -m "API: ${ts}" \
+    && ${git} commit -a -m "Packagist API: ${ts}" \
     && ${git} push
 
   _popd || exit 1
