@@ -67,7 +67,7 @@ pg_pkgs() {
   _pushd "${d_src}" || exit 1
 
   local dir="${API_DIR}/${API_VENDOR}/packages"
-  [[ ! -d "${dir}" ]] && _mkdir "${dir}"
+  _mkdir "${dir}"
 
   local pkgs
   readarray -t pkgs < <( _curl "${API_URL_MAIN}/packages/list.json?vendor=${API_VENDOR}" | ${jq} -r '.packageNames[]' | awk -F '/' '{ print $2 }' )
@@ -122,7 +122,7 @@ _timestamp() {
 
 # Make directory.
 _mkdir() {
-  ${mkdir} -p "${1}"
+  [[ ! -d "${1}" ]] && ${mkdir} -p "${1}"
 }
 
 # cURL: Get Data.
