@@ -63,7 +63,7 @@ clone() {
 # -------------------------------------------------------------------------------------------------------------------- #
 
 pg_pkgs() {
-  echo "--- [PACKAGIST] PACKAGES"
+  echo "--- [PACKAGIST] ${API_VENDOR^^} / PACKAGES"
   _pushd "${d_src}" || exit 1
 
   local dir="${API_DIR}/${API_VENDOR}/packages"
