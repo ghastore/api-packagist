@@ -66,7 +66,7 @@ pg_packages() {
   echo "--- [PACKAGIST] ${API_VENDOR^^} / PACKAGES"
   _pushd "${d_src}" || exit 1
 
-  local dir="${API_DIR}/${API_VENDOR}/packages"
+  local dir="${API_DIR}/vendors/${API_VENDOR}/packages"
   [[ ! -d "${dir}" ]] && _mkdir "${dir}"
 
   local api="${API_URL_MAIN}/packages/list.json?vendor=${API_VENDOR}"
