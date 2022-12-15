@@ -40,7 +40,7 @@ ${git} config --global init.defaultBranch 'main'
 init() {
   ts="$( _timestamp )"
   clone
-  pg_pkgs
+  pg_packages
   push
 }
 
@@ -62,15 +62,17 @@ clone() {
 # API: PACKAGES.
 # -------------------------------------------------------------------------------------------------------------------- #
 
-pg_pkgs() {
+pg_packages() {
   echo "--- [PACKAGIST] ${API_VENDOR^^} / PACKAGES"
   _pushd "${d_src}" || exit 1
 
   local dir="${API_DIR}/${API_VENDOR}/packages"
   [[ ! -d "${dir}" ]] && _mkdir "${dir}"
 
+  local api="${API_URL_MAIN}/packages/list.json?vendor=${API_VENDOR}"
+
   local pkgs
-  readarray -t pkgs < <( _curl "${API_URL_MAIN}/packages/list.json?vendor=${API_VENDOR}" | ${jq} -r '.packageNames[]' | awk -F '/' '{ print $2 }' )
+  readarray -t pkgs < <( _curl "${api}" | ${jq} -r '.packageNames[]' | awk -F '/' '{ print $2 }' )
 
   for pkg in "${pkgs[@]}"; do
     local api_main="${API_URL_MAIN}/packages/${API_VENDOR}/${pkg}.json"

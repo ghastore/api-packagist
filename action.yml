@@ -18,19 +18,19 @@ inputs:
     description: "Git Token"
     required: true
   api_url_main:
-    description: "API Main URL"
+    description: "Packagist API URL (MAIN)"
     required: true
     default: "https://packagist.org"
   api_url_repo:
-    description: "API Repo URL"
+    description: "Packagist API URL (REPO)"
     required: true
     default: "https://repo.packagist.org"
   api_dir:
-    description: "Local API Directory"
+    description: "Packagist API Local Directory"
     required: true
     default: "api/packagist"
   api_vendor:
-    description: "API Vendor"
+    description: "Packagist API Vendor"
     required: true
   bot_info:
     description: "Bot Information"
